@@ -2,15 +2,13 @@
 KNN
 ===
 
-
-Add a short description here!
-
+KNN-algorithm made for Programming in Python course
 
 Description
 ===========
 
-A longer description of your project goes here...
-
+This is implementation of KNN-algorithm made for Programming in Python course - 
+AGH University of Science and Technology
 
 Note
 ====

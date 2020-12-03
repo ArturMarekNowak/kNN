@@ -3,8 +3,8 @@
 import pytest
 from knn.skeleton import fib
 
-__author__ = "Wojtek"
-__copyright__ = "Wojtek"
+__author__ = "Wojciech Przybyło, Artur Nowak, Monika Lis"
+__copyright__ = " Monika Lis, Artur Nowak, Wojciech Przybyło"
 __license__ = "mit"
 
 

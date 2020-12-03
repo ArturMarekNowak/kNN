@@ -21,8 +21,8 @@ import logging
 
 from knn import __version__
 
-__author__ = "Wojtek"
-__copyright__ = "Wojtek"
+__author__ = "Wojciech Przybyło, Artur Nowak, Monika Lis"
+__copyright__ = "Monika Lis, Artur Nowak, Wojciech Przybyło"
 __license__ = "mit"
 
 _logger = logging.getLogger(__name__)

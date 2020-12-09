@@ -1,9 +1,17 @@
 import math
+import functools
+import operator
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+import numpy as np
 import time
-import csv
+import csv      
 import pprint
 import random
+import contextlib
+import sys, os
+from sklearn import neighbors, datasets
+
 
 
 def initHelper(features, chosenFeatures):
@@ -251,44 +259,80 @@ def executionAnalysis(kEnd=50, mod=1000, dim=10):
 
 executionAnalysis()
 
-x_0_2D = []
-x_1_2D = []
-y_0_2D = []
-y_1_2D = []
+tempDict = getPoints(2, 10000)
+tempDict = normalization(tempDict)
 
-for onePoint in points2D:
-    for feature in points2D[onePoint]:
-        if (onePoint == 0):
-            x_0_2D.append(feature[0])
-            y_0_2D.append(feature[1])
-        if (onePoint == 1):
-            x_1_2D.append(feature[0])
-            y_1_2D.append(feature[1])
+p = [0.9, 0.9]
 
-if p2D == 0:
+rc = classifyAPoint(p, tempDict, 3)
+
+x_0_2D=[tempDict[0][x][0] for x in range(len(tempDict[0]))]
+x_1_2D=[tempDict[1][x][0] for x in range(len(tempDict[1]))]
+y_0_2D=[tempDict[0][y][1] for y in range(len(tempDict[0]))]
+y_1_2D=[tempDict[1][y][1] for y in range(len(tempDict[1]))]
+
+if rc == 0:
     col = 'red'
-else:
+elif rc == 1:
     col = 'green'
 
 plt.subplot(121)
 plt.plot(x_0_2D, y_0_2D, 'o', color='red')
 plt.plot(x_1_2D, y_1_2D, 'o', color='green')
-plt.plot(p2D[0], p2D[1], 'o', color='blue')
+plt.plot(p[0], p[1],'o', color='blue' )
 plt.xlabel("x-axis")
 plt.ylabel("y-axis")
 plt.grid(True)
 
+
 plt.subplot(122)
 plt.plot(x_0_2D, y_0_2D, 'o', color='red')
 plt.plot(x_1_2D, y_1_2D, 'o', color='green')
-plt.plot(p2D[0], p2D[1], 'o', color=col)
+plt.plot(p[0], p[1],'o', color=col)
 plt.xlabel("x-axis")
 plt.ylabel("y-axis")
 plt.grid(True)
 
 plt.tight_layout(pad=3.0)
 
-plt.show()
+plt.show() 
+
+#Comparison with scikitlearn
+
+X = tempDict[0] + tempDict[1]
+X = np.array([np.array(i) for i in X])
+y = [0] * len(tempDict[0]) + [1] * len(tempDict[1])
+
+h = .02  # step size in the mesh
+
+# Create color maps
+cmap_light = ListedColormap(['orange', 'cyan', 'cornflowerblue'])
+cmap_bold = ListedColormap(['darkorange', 'c', 'darkblue'])
+
+
+clf = neighbors.KNeighborsClassifier(3, weights = 'uniform')
+clf.fit(X, y)
+
+# Plot the decision boundary. For that, we will assign a color to each
+# point in the mesh [x_min, x_max]x[y_min, y_max].
+x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
+y_min, y_max = X[:, 1].min() - 0.1, X[:, 1].max() + 0.1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                         np.arange(y_min, y_max, h))
+Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
+
+# Put the result into a color plot
+Z = Z.reshape(xx.shape)
+plt.figure()
+plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
+
+# Plot also the training points
+plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
+                edgecolor='k', s=20)
+plt.xlim(xx.min(), xx.max())
+plt.ylim(yy.min(), yy.max())
+plt.title("2-Class classification (k = %i, weights = '%s')"
+              % (3, 'uniform'))
 
 x_0_3D = []
 x_1_3D = []

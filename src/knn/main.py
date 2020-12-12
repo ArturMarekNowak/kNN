@@ -35,7 +35,7 @@ def getPoints(dim=3, mod=10000):
 
     # drive.mount('/content/drive/', force_remount=True)
 
-    with open('datasets\Malware dataset - Malware dataset.csv', 'r') as f:
+    with open('..\..\datasets\Malware dataset - Malware dataset.csv', 'r') as f:
         data = csv.reader(f, delimiter=",")
 
         itr = 1  # Skip first row with collumn names
